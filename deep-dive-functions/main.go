@@ -1,15 +1,25 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"example.com/functions/anonymous_functions"
+	"example.com/functions/recursion"
+	"example.com/functions/variadic_functions"
+)
 
 type transformFn func(int) int
 
 func main() {
 	numbers := []int{1, 2, 3, 4}
-	doubledNumbers := transformNumbers(&numbers, double)
+	transformFunction := getTransformFunction(&numbers)
+	doubledNumbers := transformNumbers(&numbers, transformFunction)
 	fmt.Printf("doubledNumbers: %v\n", doubledNumbers)
-	tripledNumbers := transformNumbers(&numbers, triple)
+	tripledNumbers := transformNumbers(&numbers, transformFunction)
 	fmt.Printf("tripledNumbers: %v\n", tripledNumbers)
+	anonymous_functions.AnonymousDemo()
+	recursion.Recursion()
+	variadic_functions.Variadic()
 }
 
 // in go, we can pass functions as parameter values
@@ -20,6 +30,15 @@ func transformNumbers(numbers *[]int, transform transformFn) []int {
 		dNumbers = append(dNumbers, transform(value))
 	}
 	return dNumbers
+}
+
+// functions can be returned as well
+func getTransformFunction(numbers *[]int) transformFn {
+	if (*numbers)[0] == 1 {
+		return double
+	} else {
+		return triple
+	}
 }
 
 func double(number int) int {
